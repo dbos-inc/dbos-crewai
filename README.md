@@ -9,12 +9,12 @@ This is based on PR: https://github.com/crewAIInc/crewAI/pull/3526
 ### Overview
 
 * **File Structure:**
-  * The `durable_agent/` folder contains all the relevant files.
+  * The `src/dbos_crewai/` folder contains all the relevant files.
     * `dbos_agent.py`: the main entrypoint for using DBOS agents.
     * `dbos_agent_executor.py`: executor for managing the agent main loop.
     * `dbos_llm.py`: wrapping llm calls as DBOS steps.
     * `dbos_util.py`: define `StepConfig` for configurable step retries.
-  * Added a new `test_dbos_agent.py` test.
+  * Tests are under `tests/test_dbos_agent.py`.
 
 * **Workflows:**
 
