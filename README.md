@@ -1,5 +1,8 @@
 # CrewAI DBOS durable agent
 
+> [!NOTE]
+> This repo is work-in-progress. Don't use it in production yet :)
+
 This repo demonstrates how to add durable execution support into CrewAI agents.
 It integrates DBOS with `CrewAgentExecutor.invoke` and related methods to provide out-of-the-box durable execution and checkpointing.
 
@@ -9,7 +12,7 @@ This is based on PR: https://github.com/crewAIInc/crewAI/pull/3526
 ### Overview
 
 * **File Structure:**
-  * The `src/dbos_crewai/` folder contains all the relevant files.
+  * The `dbos_crewai/` folder contains all the relevant files.
     * `dbos_agent.py`: the main entrypoint for using DBOS agents.
     * `dbos_agent_executor.py`: executor for managing the agent main loop.
     * `dbos_llm.py`: wrapping llm calls as DBOS steps.
@@ -63,12 +66,6 @@ task = Task(
     agent=dbos_agent,
     expected_output="The result of the multiplication.",
 )
-received_events = []
-
-@crewai_event_bus.on(ToolUsageFinishedEvent)
-@DBOS.step()  # Decorate this tool as a DBOS step
-def handle_tool_end(source, event):
-    received_events.append(event)
 
 # Optionally set a workflow ID for tracking progress. If unspecified, a UUID will be generated as the ID.
 with SetWorkflowID("test_execution"):
