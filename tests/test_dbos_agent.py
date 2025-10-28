@@ -5,12 +5,11 @@ from collections.abc import Generator, Iterator
 from typing import Any
 
 import pytest
-from dbos import DBOS, DBOSConfig, SetWorkflowID
-
 from crewai import Agent, Task
 from crewai.events.event_bus import crewai_event_bus
 from crewai.events.types.tool_usage_events import ToolUsageFinishedEvent
 from crewai.tools import tool
+from dbos import DBOS, DBOSConfig, SetWorkflowID
 
 from dbos_crewai import DBOSAgent, StepConfig
 

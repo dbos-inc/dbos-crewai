@@ -1,15 +1,7 @@
-from typing import (
-    TYPE_CHECKING,
-    cast,
-)
-
-from pydantic import Field, PrivateAttr, model_validator
+from typing import TYPE_CHECKING, cast
 
 from crewai.agent import Agent
 from crewai.agents.agent_builder.base_agent import BaseAgent, PlatformAppOrAction
-from .dbos_agent_executor import DBOSAgentExecutor
-from .dbos_llm import DBOSLLM
-from .dbos_utils import StepConfig
 from crewai.task import Task
 from crewai.tools import BaseTool
 from crewai.utilities.agent_utils import (
@@ -19,6 +11,12 @@ from crewai.utilities.agent_utils import (
 )
 from crewai.utilities.prompts import Prompts
 from crewai.utilities.token_counter_callback import TokenCalcHandler
+from pydantic import Field, PrivateAttr, model_validator
+
+from .dbos_agent_executor import DBOSAgentExecutor
+from .dbos_llm import DBOSLLM
+from .dbos_utils import StepConfig
+
 
 class DBOSAgent(BaseAgent):
     """Wrap an agent for use in DBOS durable workflows.
@@ -91,7 +89,7 @@ class DBOSAgent(BaseAgent):
 
     def get_delegation_tools(self, agents: list[BaseAgent]):
         return self._wrapped_agent.get_delegation_tools(agents=agents)
-    
+
     # TODO: make these two methods durable steps as well
     def get_platform_tools(self, apps: list[PlatformAppOrAction]) -> list[BaseTool]:
         return self._wrapped_agent.get_platform_tools(apps=apps)

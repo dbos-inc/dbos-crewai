@@ -7,13 +7,13 @@ and memory management. Also automatically wraps LLM calls as DBOS steps.
 from collections.abc import Callable
 from typing import Any
 
-from dbos import DBOS
-
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from crewai.agents.crew_agent_executor import CrewAgentExecutor
 from crewai.agents.tools_handler import ToolsHandler
-from .dbos_llm import DBOSLLM
 from crewai.tools.structured_tool import CrewStructuredTool
+from dbos import DBOS
+
+from .dbos_llm import DBOSLLM
 
 
 class DBOSAgentExecutor(CrewAgentExecutor):

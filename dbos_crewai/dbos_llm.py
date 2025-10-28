@@ -6,8 +6,8 @@ in CrewAI, making call() a DBOS step.
 
 from typing import Any
 
-from dbos import DBOS
 from crewai.llms.base_llm import BaseLLM
+from dbos import DBOS
 
 from .dbos_utils import StepConfig
 
