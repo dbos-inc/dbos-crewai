@@ -40,6 +40,10 @@ This is based on PR: https://github.com/crewAIInc/crewAI/pull/3526
 To use the integration, users only need to add a few lines of DBOS code on top of their existing agent code. Here is the code from the test:
 
 ```python
+from crewai import Agent, Task
+from crewai.tools import tool
+from dbos_crewai import DBOSAgent
+
 @tool
 @DBOS.step()  # Decorate this function as a DBOS step
 def multiplier(first_number: int, second_number: int) -> float:
@@ -71,5 +75,5 @@ task = Task(
 with SetWorkflowID("test_execution"):
     # The main agent execution loop is automatically a DBOS workflow, and the LLM calls are DBOS steps. Tools that are annotated with DBOS.step() are also DBOS steps.
     output = dbos_agent.execute_task(task)
-assert output == "The result of the multiplication is 12."
+assert output == "12"
 ```

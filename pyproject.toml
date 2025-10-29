@@ -35,7 +35,7 @@ Documentation = "https://docs.dbos.dev"
 packages = ["dbos_crewai"]
 
 [tool.hatch.build.targets.wheel]
-only-include = ["README.md"]
+include = ["README.md"]
 
 [tool.hatch.build.targets.sdist]
 include = ["README.md", "tests"]
