@@ -8,6 +8,7 @@ from typing import Any
 
 from crewai.llms.base_llm import BaseLLM
 from dbos import DBOS
+from pydantic import BaseModel
 
 from .dbos_utils import StepConfig
 
@@ -42,6 +43,7 @@ class DBOSLLM(BaseLLM):
             available_functions: dict[str, Any] | None = None,
             from_task: Any | None = None,
             from_agent: Any | None = None,
+            response_model: type[BaseModel] | None = None,
         ) -> str | Any:
             return self._orig_llm.call(
                 tools=tools,
@@ -50,6 +52,7 @@ class DBOSLLM(BaseLLM):
                 available_functions=available_functions,
                 from_task=from_task,
                 from_agent=from_agent,
+                response_model=response_model,
             )
 
         self._dbos_call = dbos_call
@@ -68,6 +71,7 @@ class DBOSLLM(BaseLLM):
         available_functions: dict[str, Any] | None = None,
         from_task: Any | None = None,
         from_agent: Any | None = None,
+        response_model: type[BaseModel] | None = None,
     ) -> str | Any:
         return self._dbos_call(
             messages=messages,
@@ -76,4 +80,5 @@ class DBOSLLM(BaseLLM):
             available_functions=available_functions,
             from_task=from_task,
             from_agent=from_agent,
+            response_model=response_model,
         )
