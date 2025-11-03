@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 from crewai.agent import Agent
 from crewai.agents.agent_builder.base_agent import BaseAgent, PlatformAppOrAction
@@ -61,7 +61,7 @@ class DBOSAgent(BaseAgent):
         object.__setattr__(
             self._wrapped_agent, "create_agent_executor", self.create_agent_executor
         )
-        # TODO: wrap LLM/function calling LLM as steps
+        # Wrap LLM/function calling LLM as steps
         self._wrapped_agent.llm = DBOSLLM(
             orig_llm=self._wrapped_agent.llm,
             step_config=self.llm_step_config,
@@ -90,7 +90,6 @@ class DBOSAgent(BaseAgent):
     def get_delegation_tools(self, agents: list[BaseAgent]):
         return self._wrapped_agent.get_delegation_tools(agents=agents)
 
-    # TODO: make these two methods durable steps as well
     def get_platform_tools(self, apps: list[PlatformAppOrAction]) -> list[BaseTool]:
         return self._wrapped_agent.get_platform_tools(apps=apps)
 
@@ -106,7 +105,6 @@ class DBOSAgent(BaseAgent):
         Returns:
             An instance of the DBOSAgentExecutor class.
         """
-
         raw_tools: list[BaseTool] = tools or self._wrapped_agent.tools or []
         parsed_tools = parse_tools(raw_tools)
 

@@ -5,7 +5,7 @@ and memory management. Also automatically wraps LLM calls as DBOS steps.
 """
 
 from collections.abc import Callable
-from typing import Any
+from typing import Any, cast
 
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from crewai.agents.crew_agent_executor import CrewAgentExecutor
@@ -14,6 +14,28 @@ from crewai.tools.structured_tool import CrewStructuredTool
 from dbos import DBOS
 
 from .dbos_llm import DBOSLLM
+
+
+# Overload invoke with DBOS workflow
+@DBOS.workflow(name="DBOSAgentExecutor.invoke")
+def dbos_invoke(cai_exec_name: str, inputs: dict[str, str]) -> dict[str, Any]:
+    """Invoke the agent executor within a DBOS workflow.
+    Args:
+        cai_exec_name: The name prefix of the DBOSAgentExecutor instance.
+        inputs: Input dictionary containing the task input.
+    Returns:
+        Dictionary with agent output.
+    """
+    # TODO: This means DBOS cannot recover workflows if the executor instance doesn't exist.
+    cai_exec = _dbos_local_executor_cache.get(cai_exec_name)
+    if cai_exec is None:
+        raise ValueError(f"DBOSAgentExecutor with name {cai_exec_name} not found.")
+    # Get the original invoke method
+    orig_exec = cast(CrewAgentExecutor, super(DBOSAgentExecutor, cai_exec))
+    return orig_exec.invoke(inputs)
+
+
+_dbos_local_executor_cache: dict[str, CrewAgentExecutor] = {}
 
 
 class DBOSAgentExecutor(CrewAgentExecutor):
@@ -95,13 +117,8 @@ class DBOSAgentExecutor(CrewAgentExecutor):
             callbacks=callbacks,
         )
 
-        # Overload invoke with DBOS workflow
-        # TODO (Qian): DBOS requires workflows to be defined statically, so the recovery can correctly find the workflow definition. Currently, AgentExecutor might be created dynamically in execute_task. This means if the server crashes, recovery cannot find the workflow definition by name. For durable execution, we might need require a static definition of the executor.
-        @DBOS.workflow(name=f"{name_prefix}.executor.invoke")
-        def dbos_invoke(inputs: dict[str, str]) -> dict[str, Any]:
-            return super(DBOSAgentExecutor, self).invoke(inputs)
-
-        self.dbos_invoke = dbos_invoke
+        self._name_prefix = name_prefix
+        _dbos_local_executor_cache[name_prefix] = self
 
     def invoke(self, inputs: dict[str, str]) -> dict[str, Any]:
         """Invoke the agent executor within a DBOS workflow.
@@ -112,4 +129,4 @@ class DBOSAgentExecutor(CrewAgentExecutor):
         Returns:
             Dictionary with agent output.
         """
-        return self.dbos_invoke(inputs)
+        return dbos_invoke(self._name_prefix, inputs)

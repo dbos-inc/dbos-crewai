@@ -81,7 +81,6 @@ def test_agent_execution_with_tools(dbos: DBOS):
         """Useful for when you need to multiply two numbers together."""
         nonlocal step_cnt
         step_cnt += 1
-        print(f"DBOS step 1: {DBOS.step_id}")
         return first_number * second_number
 
     orig_agent = Agent(
@@ -104,7 +103,6 @@ def test_agent_execution_with_tools(dbos: DBOS):
     received_events = []
 
     @crewai_event_bus.on(ToolUsageFinishedEvent)
-    @DBOS.step()
     def handle_tool_end(source, event):
         # This is outside of the agent workflow.
         received_events.append(event)
@@ -123,7 +121,7 @@ def test_agent_execution_with_tools(dbos: DBOS):
     wf = DBOS.get_workflow_status("test_execution")
     assert wf is not None
     assert wf.status == "SUCCESS"
-    assert wf.name == "test_agent_execution_with_tools.executor.invoke"
+    assert wf.name == "DBOSAgentExecutor.invoke"
 
     child_steps = DBOS.list_workflow_steps("test_execution")
     assert len(child_steps) == 3
