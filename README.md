@@ -37,12 +37,21 @@ This is based on PR: https://github.com/crewAIInc/crewAI/pull/3526
 
 ### Example
 
-To use the integration, users only need to add a few lines of DBOS code on top of their existing agent code. Here is the code from the test:
+To use the integration, users only need to add a few lines of DBOS code on top of their existing agent code. Here is an example of using CrewAI with DBOS (this example is complete, it can be run "as is").
 
 ```python
 from crewai import Agent, Task
 from crewai.tools import tool
 from dbos_crewai import DBOSAgent
+from dbos import DBOS, SetWorkflowID, DBOSConfig
+import os
+
+config: DBOSConfig = {
+    "name": "dbos-crewai-starter",
+    "system_database_url": os.environ.get("DBOS_SYSTEM_DATABASE_URL"),
+    "conductor_key": os.environ.get("DBOS_CONDUCTOR_KEY"),
+}
+DBOS(config=config)
 
 @tool
 @DBOS.step()  # Decorate this function as a DBOS step
@@ -71,9 +80,15 @@ task = Task(
     expected_output="The result of the multiplication.",
 )
 
-# Optionally set a workflow ID for tracking progress. If unspecified, a UUID will be generated as the ID.
-with SetWorkflowID("test_execution"):
-    # The main agent execution loop is automatically a DBOS workflow, and the LLM calls are DBOS steps. Tools that are annotated with DBOS.step() are also DBOS steps.
-    output = dbos_agent.execute_task(task)
-assert output == "12"
+def main():
+    # Launch DBOS before running workflows
+    DBOS.launch()
+    # Optionally set a workflow ID for tracking progress. If unspecified, a UUID will be generated as the ID.
+    with SetWorkflowID("test_execution"):
+        # The main agent execution loop is automatically a DBOS workflow, and the LLM calls are DBOS steps. Tools that are annotated with DBOS.step() are also DBOS steps.
+        output = dbos_agent.execute_task(task)
+    print(output)
+
+if __name__ == "__main__":
+    main()
 ```
