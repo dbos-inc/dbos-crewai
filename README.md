@@ -39,6 +39,11 @@ This is based on PR: https://github.com/crewAIInc/crewAI/pull/3526
 
 To use the integration, users only need to add a few lines of DBOS code on top of their existing agent code. Here is an example of using CrewAI with DBOS (this example is complete, it can be run "as is").
 
+First, install this package:
+```shell
+pip install dbos-crewai
+```
+
 ```python
 from crewai import Agent, Task
 from crewai.tools import tool
@@ -91,4 +96,22 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
+
+Run this project:
+```shell
+python3 main.py
+```
+
+You should see output similar to this:
+```
+DBOS system database URL: sqlite:///dbos_crewai_starter.sqlite
+Using SQLite as a system database. The SQLite system database is for development and testing. PostgreSQL is recommended for production use.
+16:40:02 [    INFO] (dbos:_dbos.py:373) Initializing DBOS (v2.3.0)
+16:40:02 [    INFO] (dbos:_dbos.py:448) Executor ID: local
+16:40:02 [    INFO] (dbos:_dbos.py:449) Application version: 2cbefd22b731ce5a75dcbe4e3ced74bf
+16:40:02 [    INFO] (dbos:_dbos.py:507) No workflows to recover from application version 2cbefd22b731ce5a75dcbe4e3ced74bf
+16:40:02 [    INFO] (dbos:_dbos.py:563) DBOS launched!
+To view and manage workflows, connect to DBOS Conductor at:https://console.dbos.dev/self-host?appname=dbos-crewai-starter
+12
 ```
