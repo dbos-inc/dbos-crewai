@@ -44,6 +44,8 @@ First, install this package:
 pip install dbos-crewai
 ```
 
+Then, copy this to your main file (e.g., `main.py`):
+
 ```python
 from crewai import Agent, Task
 from crewai.tools import tool
